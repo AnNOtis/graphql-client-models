@@ -33,16 +33,15 @@ function isPrimitiveType(value) {
   )
 }
 
-function transformedResult({ getter, self, value, fieldName, original }) {
+function transformedResult({ getter, self, fieldName, original }) {
   if (Array.isArray(getter)) {
     return pipe({
       funcs: getter,
-      value,
       self,
       original
     })
   } else if (isFunction(getter)) {
-    return getter(self, value, {
+    return getter(self, {
       original
     })
   }
@@ -108,7 +107,6 @@ function initProxy(rootData, models, configs) {
               : transformedResult({
                   getter,
                   self: clonedData,
-                  value,
                   fieldName: key,
                   root: proxyRootData,
                   original: rootData
@@ -137,7 +135,6 @@ function initProxy(rootData, models, configs) {
           const result = transformedResult({
             getter,
             self: clonedData,
-            value: undefined,
             fieldName: key,
             root: proxyRootData,
             original: rootData

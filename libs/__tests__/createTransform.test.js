@@ -67,7 +67,6 @@ describe("Model is assigned getters when there are corresponding type", () => {
           newField: "new",
           __typename: "SomeModel"
         }),
-        data.changedField,
         expect.objectContaining({
           original: data
         })
@@ -180,4 +179,20 @@ describe("Model is assigned getters when there are corresponding type", () => {
       expect(model.sameField).toBe("same")
     })
   })
+})
+
+test('Existing data field can be override', () => {
+  const models = {
+    SomeModel: {
+      existingField: (self, { original }) => `${original.existingField} is overrided`,
+    }
+  }
+  const transform = createTransform(models)
+
+  const result = transform({
+    existingField: 'existingField',
+    __typename: 'SomeModel',
+  })
+
+  expect(result.existingField).toBe('existingField is overrided')
 })
