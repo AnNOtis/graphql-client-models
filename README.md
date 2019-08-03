@@ -8,10 +8,10 @@ Fortunately, GraphQL provides [meta-fields `__typename`](https://graphql.org/lea
 
 graphql-client-models leverages GraphQL's type system and provides following benefits.
 
-**Automatic** Automatically transform GraphQL response by your model definitions regardless the response's structure. <br>
-**Centralized** Define model once and use anywhere in your code. <br>
-**Lazy evalutaion** Won't calculate any field until you need it. <br>
-**Small** It's a small library with zero dependency.
+- **Automatic** Automatically transform GraphQL response by your model definitions regardless the response's structure.
+- **Centralized** Define model once and use anywhere in your code.
+- **Lazy evalutaion** Won't calculate any field until you need it.
+- **Small** It's a small library with zero dependency.
 
 ## Installation
 
@@ -33,43 +33,29 @@ const models = {
 /* Create transform function */
 const transform = createTransform(models)
 
-client.query({
-  query: gql`
-    {
-      user(id: 1) {
-        firstName
-        lastName
-        followers {
-          firstName
-          lastName
-        }
-      }
-    }
-  `
-}).then(({data}) => {
-  /**
-   * data = {
-   *   user {
-   *     firstName: 'Walter'
-   *     lastName: 'White'
-   *     followers: [
-   *       {
-   *         firstName: 'Jesse'
-   *         lastName: 'Pinkman'
-   *         __typename: 'User'
-   *       }
-   *     ]
-   *     __typename: 'User'
-   *   }
-   * }
-   */
+/**
+ * Response from GraphQL service
+ * {
+ *   user {
+ *     firstName: 'Walter'
+ *     lastName: 'White'
+ *     followers: [
+ *       {
+ *         firstName: 'Jesse'
+ *         lastName: 'Pinkman'
+ *         __typename: 'User'
+ *       }
+ *     ]
+ *     __typename: 'User'
+ *   }
+ * }
+ */
 
-  /* Transform response data */
-  const result = transform(data)
+/* Transform response data */
+const result = transform(response)
 
-  console.log(result.user.fullName) //=> Walter White
-  console.log(result.user.followers[0].fullName) //=> Jesse Pinkman
-});
+console.log(result.user.fullName) //=> Walter White
+console.log(result.user.followers[0].fullName) //=> Jesse Pinkman
 ```
 
 > The example uses [apollo-client](https://github.com/apollographql/apollo-client) as the client because it adds `__typename` to each query automatically. If you are using different graphql client, you may need to add `__typename` manually.
@@ -115,16 +101,6 @@ define getters for each type. See below for models structure.
 
 returns `transform` function. You can use `transform` function in your server response.
 
-### Model's structure
-
-```
-{
-  <type>: {
-    <field>: <getter>
-  }
-}
-```
-
 **options**
 
 Type: `object`
@@ -150,6 +126,15 @@ const models = {
 createTransform(models, { getContext: () => ({ client: apolloClient }) })
 ```
 
+### Model's structure
+
+```
+{
+  <type>: {
+    <field>: <getter>
+  }
+}
+```
 
 **type**
 
