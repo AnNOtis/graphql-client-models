@@ -5,10 +5,19 @@ const DIFF_KEY = {
   added: "+ added"
 }
 
-function pipe({ funcs, value, self, root }) {
+function pipe({
+  funcs,
+  value,
+  self,
+  root,
+  original,
+  context
+}) {
   return funcs.reduce(function(acc, func) {
     return func(acc, self, {
-      root
+      root,
+      original,
+      context
     })
   }, value)
 }
@@ -33,16 +42,28 @@ function isPrimitiveType(value) {
   )
 }
 
-function transformedResult({ getter, self, fieldName, original }) {
+function transformedResult({
+  getter,
+  self,
+  fieldName,
+  original,
+  root,
+  getContext,
+}) {
+  const context = getContext()
   if (Array.isArray(getter)) {
     return pipe({
       funcs: getter,
       self,
-      original
+      root,
+      original,
+      context
     })
   } else if (isFunction(getter)) {
     return getter(self, {
-      original
+      root,
+      original,
+      context,
     })
   }
 
@@ -64,6 +85,7 @@ function createDiffRecord(data, models, path) {
 
 function initProxy(rootData, models, configs) {
   let proxyRootData
+  const getContext = configs.getContext || (function(){})
 
   function assignGetters(data, path = []) {
     if (isPrimitiveType(data)) return data
@@ -109,7 +131,8 @@ function initProxy(rootData, models, configs) {
                   self: clonedData,
                   fieldName: key,
                   root: proxyRootData,
-                  original: rootData
+                  original: rootData,
+                  getContext
                 })
 
           return (cache[key] = assignGetters(result, path.concat(key)))
@@ -137,7 +160,8 @@ function initProxy(rootData, models, configs) {
             self: clonedData,
             fieldName: key,
             root: proxyRootData,
-            original: rootData
+            original: rootData,
+            getContext
           })
 
           return (cache[key] = assignGetters(result, path.concat(key)))
@@ -163,7 +187,7 @@ function initProxy(rootData, models, configs) {
   return (proxyRootData = assignGetters(rootData))
 }
 
-const createTransformFn = function(models, configs) {
+const createTransformFn = function(models, configs = {}) {
   return function transform(data) {
     return initProxy(data, Object.freeze(models), configs)
   }

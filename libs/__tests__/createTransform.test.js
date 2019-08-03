@@ -181,18 +181,45 @@ describe("Model is assigned getters when there are corresponding type", () => {
   })
 })
 
-test('Existing data field can be override', () => {
+test("Existing data field can be override", () => {
   const models = {
     SomeModel: {
-      existingField: (self, { original }) => `${original.existingField} is overrided`,
+      existingField: (self, { original }) =>
+        `${original.existingField} is overrided`
     }
   }
   const transform = createTransform(models)
 
   const result = transform({
-    existingField: 'existingField',
-    __typename: 'SomeModel',
+    existingField: "existingField",
+    __typename: "SomeModel"
   })
 
-  expect(result.existingField).toBe('existingField is overrided')
+  expect(result.existingField).toBe("existingField is overrided")
+})
+
+test("The result of getContext will be passed to getter's context", () => {
+  const models = {
+    SomeModel: {
+      someField: (self, { context }) => context
+    }
+  }
+  let counter = 1
+  const mockGetContext = jest.fn(() => counter)
+  const transform = createTransform(models, {
+    getContext: mockGetContext
+  })
+  const response = {
+    someField: "foo",
+    __typename: "SomeModel"
+  }
+  const result = transform(response)
+  expect(mockGetContext).not.toBeCalled
+  expect(result.someField).toBe(1)
+  expect(mockGetContext).toBeCalledTimes(1)
+
+  counter = 2
+  const result2 = transform(response)
+  expect(result2.someField).toBe(2)
+  expect(mockGetContext).toBeCalledTimes(2)
 })
