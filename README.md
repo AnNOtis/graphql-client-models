@@ -2,16 +2,18 @@
 
 > Use centralized models to manage derived UI data for GraphQL response.
 
+- **Automatic** Automatically transform GraphQL response by your model definitions regardless the response's structure.
+- **Centralized** Define model once and use anywhere in your code.
+- **Lazy evalutaion** Uses getter. Field won't be calculated until you need it.
+- **Small** It's a small library with zero dependency.
+
+## Why & How
+
 In a client-side application, we need to deal with API response and transform it to fit our need of UI derived data. For GraphQL's response, it's trivial to transform nested & complicated data due to GraphQL's flexible nature.
 
 Fortunately, GraphQL provides [meta-fields `__typename`](https://graphql.org/learn/queries/#meta-fields), so we're able to know the structure of GraphQL response. we can find the targeted object that we're going to transform based on GraphQL type whether it's nested inside another object or arrray.
 
-graphql-client-models leverages GraphQL's type system and provides following benefits.
-
-- **Automatic** Automatically transform GraphQL response by your model definitions regardless the response's structure.
-- **Centralized** Define model once and use anywhere in your code.
-- **Lazy evalutaion** Won't calculate any field until you need it.
-- **Small** It's a small library with zero dependency.
+graphql-client-models recursively check response's each object. if it finds an object with a `__typename` matching with any defined model, the model's getters will be set on the object, so we can access properties added by the model like it's original in the response.
 
 ## Installation
 
