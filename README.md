@@ -7,6 +7,8 @@
 - **Lazy evalutaion** Uses getter. Field won't be calculated until you need it.
 - **Small** It's a small library with zero dependency.
 
+To watch the example with the react-apollo integration, go to [example on CodeSandbox](https://codesandbox.io/s/graphql-client-models-demo-for-react-apollo-qcfzl)
+
 ## Why & How
 
 In a client-side application, we need to deal with API response and transform it to fit our need of UI derived data. For GraphQL's response, it's trivial to transform nested & complicated data due to GraphQL's flexible nature.
