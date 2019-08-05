@@ -7,7 +7,7 @@
 - **Lazy evalutaion** Uses getter. Field won't be calculated until you need it.
 - **Small** It's a small library with zero dependency.
 
-To watch an example with the react-apollo integration, go to [the example on CodeSandbox](https://codesandbox.io/s/graphql-client-models-demo-for-react-apollo-qcfzl)
+To watch an example with the [react-apollo](https://github.com/apollographql/react-apollo) integration, go to [the example on CodeSandbox](https://codesandbox.io/s/graphql-client-models-demo-for-react-apollo-qcfzl)
 
 ## Why & How
 
