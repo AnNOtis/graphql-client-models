@@ -1,4 +1,4 @@
-# GraphQL Client Models
+# GraphQL Client Models [![npm version](https://badge.fury.io/js/graphql-client-models.svg)](https://badge.fury.io/js/graphql-client-models)
 
 > Use centralized models to manage derived UI data for GraphQL response.
 
